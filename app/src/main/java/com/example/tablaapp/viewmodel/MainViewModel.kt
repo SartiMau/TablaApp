@@ -1,4 +1,4 @@
-package com.example.tablaapp.ui.viewmodel
+package com.example.tablaapp.viewmodel
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
