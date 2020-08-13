@@ -9,8 +9,9 @@ import com.example.tablaapp.util.EMPTY_STRING
 import com.example.tablaapp.viewmodel.MainViewModel.MainStatus.FINISH
 import com.example.tablaapp.viewmodel.MainViewModel.MainStatus.INIT
 import com.example.tablaapp.viewmodel.MainViewModel.MainStatus.SHOW_DIALOG
+import com.example.tablaapp.viewmodel.contract.MainContract
 
-class MainViewModel @ViewModelInject constructor() : ViewModel() {
+class MainViewModel @ViewModelInject constructor() : ViewModel(), MainContract.ViewModel {
 
     private var mutableMainState: MutableState<MainData> = mutableStateOf(MainData(INIT, EMPTY_STRING, MainDialogData()))
 
@@ -18,30 +19,30 @@ class MainViewModel @ViewModelInject constructor() : ViewModel() {
         get() = mutableMainState
 
 
-    fun showDialogAddNewPlayer() {
+    override fun showDialogAddNewPlayer() {
         mainState.value.let {
             mutableMainState.value = MainData(SHOW_DIALOG, it.name, MainDialogData(it.dialogData.isEmptyDialogInputText))
         }
     }
 
-    fun onNavigationIconClicked() {
+    override fun onNavigationIconClicked() {
         mutableMainState.value = MainData(FINISH, EMPTY_STRING, MainDialogData())
     }
 
-    fun closeDialog() {
+    override fun closeDialog() {
         mainState.let {
             mutableMainState.value = MainData(INIT, it.value.name, MainDialogData())
         }
     }
 
-    fun onConfirmDialogButton(textFieldStatus: String) {
+    override fun onConfirmDialogButton(textValue: String) {
         mainState.value.let {
-            if (textFieldStatus.isEmpty()) {
+            if (textValue.isEmpty()) {
                 mutableMainState.value = MainData(
                     SHOW_DIALOG, it.name, MainDialogData(isEmptyDialogInputText = true, showErrorText = true, labelColor = Color.Red)
                 )
             } else {
-                mutableMainState.value = MainData(INIT, textFieldStatus, MainDialogData())
+                mutableMainState.value = MainData(INIT, textValue, MainDialogData())
             }
         }
     }
