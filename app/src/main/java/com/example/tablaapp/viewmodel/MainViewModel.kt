@@ -20,9 +20,11 @@ class MainViewModel @ViewModelInject constructor() : ViewModel(), MainContract.V
 
 
     override fun showDialogAddNewPlayer() {
-        mainState.value.let {
-            mutableMainState.value = MainData(SHOW_DIALOG, it.name, MainDialogData(it.dialogData.isEmptyDialogInputText))
-        }
+        mutableMainState.value = MainData(
+            SHOW_DIALOG,
+            mainState.value.name,
+            MainDialogData(mainState.value.dialogData.isEmptyDialogInputText)
+        )
     }
 
     override fun onNavigationIconClicked() {
@@ -30,20 +32,18 @@ class MainViewModel @ViewModelInject constructor() : ViewModel(), MainContract.V
     }
 
     override fun closeDialog() {
-        mainState.let {
-            mutableMainState.value = MainData(INIT, it.value.name, MainDialogData())
-        }
+        mutableMainState.value = MainData(INIT, mainState.value.name, MainDialogData())
     }
 
     override fun onConfirmDialogButton(textValue: String) {
-        mainState.value.let {
-            if (textValue.isEmpty()) {
-                mutableMainState.value = MainData(
-                    SHOW_DIALOG, it.name, MainDialogData(isEmptyDialogInputText = true, showErrorText = true, labelColor = Color.Red)
-                )
-            } else {
-                mutableMainState.value = MainData(INIT, textValue, MainDialogData())
-            }
+        if (textValue.isEmpty()) {
+            mutableMainState.value = MainData(
+                SHOW_DIALOG,
+                mainState.value.name,
+                MainDialogData(isEmptyDialogInputText = true, showErrorText = true, labelColor = Color.Red)
+            )
+        } else {
+            mutableMainState.value = MainData(INIT, textValue, MainDialogData())
         }
     }
 
