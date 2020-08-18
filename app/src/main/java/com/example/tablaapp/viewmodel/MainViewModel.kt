@@ -8,6 +8,7 @@ import androidx.ui.graphics.Color
 import com.example.domain.entity.User
 import com.example.domain.util.ZERO_POINT
 import com.example.tablaapp.util.EMPTY_STRING
+import com.example.tablaapp.util.ONE_INT
 import com.example.tablaapp.viewmodel.MainViewModel.MainStatus.FINISH
 import com.example.tablaapp.viewmodel.MainViewModel.MainStatus.INIT
 import com.example.tablaapp.viewmodel.MainViewModel.MainStatus.SHOW_DIALOG
@@ -78,27 +79,18 @@ class MainViewModel @ViewModelInject constructor() : ViewModel(), MainContract.V
                 mainState.value.listOfPlayers
             )
         } else {
-            if (player.points == 0) {
-                mutableMainState.value = MainData(
-                    INIT,
-                    MainCardPlayerData(player.name, false),
-                    MainDialogData(),
-                    mainState.value.listOfPlayers
-                )
-            } else {
-                mutableMainState.value = MainData(
-                    INIT,
-                    MainCardPlayerData(player.name, true),
-                    MainDialogData(),
-                    mainState.value.listOfPlayers
-                )
-            }
+            mutableMainState.value = MainData(
+                INIT,
+                MainCardPlayerData(player.name, player.points != ZERO_POINT),
+                MainDialogData(),
+                mainState.value.listOfPlayers
+            )
         }
     }
 
     override fun addPointToPlayer(player: User) {
         val position = mainState.value.listOfPlayers.indexOf(player)
-        mainState.value.listOfPlayers[position].points = mainState.value.listOfPlayers[position].points + 1
+        mainState.value.listOfPlayers[position].points = mainState.value.listOfPlayers[position].points + ONE_INT
         mutableMainState.value = MainData(
             INIT,
             MainCardPlayerData(mainState.value.mainCard.nameOfCardToOpen),
@@ -109,22 +101,17 @@ class MainViewModel @ViewModelInject constructor() : ViewModel(), MainContract.V
 
     override fun removePointToPlayer(player: User) {
         val position = mainState.value.listOfPlayers.indexOf(player)
-        mainState.value.listOfPlayers[position].points = mainState.value.listOfPlayers[position].points - 1
+        mainState.value.listOfPlayers[position].points = mainState.value.listOfPlayers[position].points - ONE_INT
+        var disableButton = true
         if (mainState.value.listOfPlayers[position].points == ZERO_POINT) {
-            mutableMainState.value = MainData(
-                INIT,
-                MainCardPlayerData(mainState.value.mainCard.nameOfCardToOpen, false),
-                MainDialogData(),
-                mainState.value.listOfPlayers
-            )
-        } else {
-            mutableMainState.value = MainData(
-                INIT,
-                MainCardPlayerData(mainState.value.mainCard.nameOfCardToOpen),
-                MainDialogData(),
-                mainState.value.listOfPlayers
-            )
+            disableButton = false
         }
+        mutableMainState.value = MainData(
+            INIT,
+            MainCardPlayerData(mainState.value.mainCard.nameOfCardToOpen, disableButton),
+            MainDialogData(),
+            mainState.value.listOfPlayers
+        )
     }
 
     data class MainData(

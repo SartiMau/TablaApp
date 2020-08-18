@@ -17,7 +17,6 @@ import androidx.ui.foundation.shape.corner.CircleShape
 import androidx.ui.foundation.shape.corner.RoundedCornerShape
 import androidx.ui.graphics.Color
 import androidx.ui.input.TextFieldValue
-import androidx.ui.input.VisualTransformation
 import androidx.ui.layout.Column
 import androidx.ui.layout.Row
 import androidx.ui.layout.fillMaxWidth
@@ -44,7 +43,6 @@ import com.example.tablaapp.ui.theme.listItemTrailingFontSize
 import com.example.tablaapp.ui.theme.rowPadding
 import com.example.tablaapp.util.EMPTY_STRING
 import com.example.tablaapp.viewmodel.MainViewModel
-import java.util.Locale
 
 @Composable
 fun setToolbar(context: Context, viewModel: MainViewModel) {
@@ -150,5 +148,3 @@ fun showMainScreenContent(listOfPlayers: ArrayList<User>, viewModel: MainViewMod
         }
     }
 }
-
-
