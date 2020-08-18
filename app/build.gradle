@@ -45,6 +45,8 @@ kapt {
     correctErrorTypes = true
 }
 
+preBuild.dependsOn ktlint
+
 dependencies {
     // Activity Ktx for by viewModels()
     implementation "androidx.activity:activity-ktx:1.1.0"

@@ -8,6 +8,12 @@ java {
     targetCompatibility = JavaVersion.VERSION_1_7
 }
 
+compileKotlin {
+    kotlinOptions {
+        freeCompilerArgs = ["-XXLanguage:+InlineClasses"]
+    }
+}.dependsOn ktlint
+
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }

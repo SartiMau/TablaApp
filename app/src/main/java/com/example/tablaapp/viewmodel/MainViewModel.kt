@@ -18,7 +18,6 @@ class MainViewModel @ViewModelInject constructor() : ViewModel(), MainContract.V
     val mainState: MutableState<MainData>
         get() = mutableMainState
 
-
     override fun showDialogAddNewPlayer() {
         mutableMainState.value = MainData(
             SHOW_DIALOG,
