@@ -12,6 +12,7 @@ import com.example.tablaapp.ui.theme.whiteBackgroundColor
 import com.example.tablaapp.util.EMPTY_STRING
 import com.example.tablaapp.util.MONTH_SIMPLE_DATE_FORMAT
 import com.example.tablaapp.util.ONE_INT
+import com.example.tablaapp.util.ZERO_INT
 import com.example.tablaapp.viewmodel.MainViewModel.MainStatus.FINISH
 import com.example.tablaapp.viewmodel.MainViewModel.MainStatus.INIT
 import com.example.tablaapp.viewmodel.MainViewModel.MainStatus.SHOW_DIALOG
@@ -134,12 +135,37 @@ class MainViewModel @ViewModelInject constructor() : ViewModel(), MainContract.V
         )
     }
 
+    override fun showMoreOptions() {
+        mutableMainState.value = MainData(
+            INIT,
+            MainCardPlayerData(),
+            MainDialogData(),
+            mainState.value.listOfPlayers,
+            mainState.value.currentMonth,
+            !mainState.value.showMoreOptions
+        )
+    }
+
+    override fun resetPlayerPoints() {
+        mainState.value.listOfPlayers.forEach {
+            it.points = ZERO_INT
+        }
+        mutableMainState.value = MainData(
+            INIT,
+            MainCardPlayerData(mainState.value.mainCard.nameOfCardToOpen),
+            MainDialogData(),
+            mainState.value.listOfPlayers,
+            mainState.value.currentMonth
+        )
+    }
+
     data class MainData(
         val state: MainStatus,
         val mainCard: MainCardPlayerData,
         val dialogData: MainDialogData,
         val listOfPlayers: ArrayList<User>,
-        val currentMonth: String
+        val currentMonth: String,
+        val showMoreOptions: Boolean = false
     )
 
     data class MainDialogData(
