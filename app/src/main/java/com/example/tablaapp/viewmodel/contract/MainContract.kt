@@ -12,5 +12,7 @@ interface MainContract {
         fun showCardButtons(player: User)
         fun addPointToPlayer(player: User)
         fun removePointToPlayer(player: User)
+        fun showMoreOptions()
+        fun resetPlayerPoints()
     }
 }

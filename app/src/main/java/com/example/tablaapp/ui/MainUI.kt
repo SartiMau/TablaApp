@@ -25,6 +25,8 @@ import androidx.ui.layout.size
 import androidx.ui.material.AlertDialog
 import androidx.ui.material.Button
 import androidx.ui.material.Card
+import androidx.ui.material.DropdownMenu
+import androidx.ui.material.DropdownMenuItem
 import androidx.ui.material.IconButton
 import androidx.ui.material.ListItem
 import androidx.ui.material.MaterialTheme
@@ -47,9 +49,12 @@ import com.example.tablaapp.ui.theme.listItemIconModifierPadding
 import com.example.tablaapp.ui.theme.listItemIconModifierSize
 import com.example.tablaapp.ui.theme.listItemTrailingFontSize
 import com.example.tablaapp.ui.theme.monthTextSize
+import com.example.tablaapp.ui.theme.paddingStartDropMenuItemText
 import com.example.tablaapp.ui.theme.rowPadding
 import com.example.tablaapp.ui.theme.whiteBackgroundColor
+import com.example.tablaapp.util.ADD_NEW_PLAYER
 import com.example.tablaapp.util.EMPTY_STRING
+import com.example.tablaapp.util.RESET_POINTS
 import com.example.tablaapp.viewmodel.MainViewModel
 
 @Composable
@@ -58,13 +63,28 @@ fun setToolbar(context: Context, viewModel: MainViewModel) {
         TopAppBar(
             title = { Text(context.getString(R.string.app_name)) },
             navigationIcon = {
-                IconButton(onClick = { viewModel.onNavigationIconClicked() }) {
-                    Icon(vectorResource(R.drawable.ic_baseline_arrow_back_24))
-                }
+                IconButton(onClick = { viewModel.onNavigationIconClicked() }) { Icon(vectorResource(R.drawable.ic_baseline_arrow_back_24)) }
             },
             actions = {
-                IconButton(onClick = { viewModel.showDialogAddNewPlayer() }) {
-                    Icon(vectorResource(R.drawable.ic_baseline_person_add_24))
+                DropdownMenu(
+                    toggle = {
+                        IconButton(onClick = { viewModel.showMoreOptions() }) { Icon(vectorResource(R.drawable.ic_baseline_more_vert)) }
+                    },
+                    expanded = viewModel.mainState.value.showMoreOptions,
+                    onDismissRequest = { viewModel.showMoreOptions() }
+                ) {
+                    DropdownMenuItem(onClick = { viewModel.showDialogAddNewPlayer() }) {
+                        Row {
+                            Icon(vectorResource(R.drawable.ic_baseline_person_add_24))
+                            Text(text = ADD_NEW_PLAYER, modifier = Modifier.padding(start = paddingStartDropMenuItemText))
+                        }
+                    }
+                    DropdownMenuItem(onClick = { viewModel.resetPlayerPoints() }) {
+                        Row {
+                            Icon(vectorResource(R.drawable.ic_baseline_autorenew))
+                            Text(text = RESET_POINTS, modifier = Modifier.padding(start = paddingStartDropMenuItemText))
+                        }
+                    }
                 }
             }
         )
