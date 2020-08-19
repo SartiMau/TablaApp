@@ -102,13 +102,12 @@ class MainViewModel @ViewModelInject constructor() : ViewModel(), MainContract.V
     override fun removePointToPlayer(player: User) {
         val position = mainState.value.listOfPlayers.indexOf(player)
         mainState.value.listOfPlayers[position].points = mainState.value.listOfPlayers[position].points - ONE_INT
-        var disableButton = true
-        if (mainState.value.listOfPlayers[position].points == ZERO_POINT) {
-            disableButton = false
-        }
         mutableMainState.value = MainData(
             INIT,
-            MainCardPlayerData(mainState.value.mainCard.nameOfCardToOpen, disableButton),
+            MainCardPlayerData(
+                mainState.value.mainCard.nameOfCardToOpen,
+                mainState.value.listOfPlayers[position].points != ZERO_POINT
+            ),
             MainDialogData(),
             mainState.value.listOfPlayers
         )
