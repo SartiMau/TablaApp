@@ -9,6 +9,7 @@ import androidx.ui.core.setContent
 import androidx.ui.layout.Column
 import com.example.tablaapp.ui.showMainScreenContent
 import com.example.tablaapp.ui.setToolbar
+import com.example.tablaapp.ui.showCurrentMonth
 import com.example.tablaapp.ui.showDialogAddNewPlayer
 import com.example.tablaapp.viewmodel.MainViewModel
 import com.example.tablaapp.viewmodel.MainViewModel.MainData
@@ -47,6 +48,7 @@ class MainActivity : AppCompatActivity() {
     private fun init(context: Context, value: MainData) {
         Column {
             setToolbar(context, viewModel)
+            showCurrentMonth(value.currentMonth)
             showMainScreenContent(value.listOfPlayers, viewModel)
         }
     }
@@ -55,6 +57,7 @@ class MainActivity : AppCompatActivity() {
     private fun showDialogAddNewPlayer(context: Context, value: MainData) {
         Column {
             setToolbar(context, viewModel)
+            showCurrentMonth(value.currentMonth)
             showDialogAddNewPlayer(context, viewModel)
             showMainScreenContent(value.listOfPlayers, viewModel)
         }

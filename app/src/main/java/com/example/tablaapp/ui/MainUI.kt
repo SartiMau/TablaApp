@@ -15,10 +15,10 @@ import androidx.ui.foundation.Text
 import androidx.ui.foundation.lazy.LazyColumnItems
 import androidx.ui.foundation.shape.corner.CircleShape
 import androidx.ui.foundation.shape.corner.RoundedCornerShape
-import androidx.ui.graphics.Color
 import androidx.ui.input.TextFieldValue
 import androidx.ui.layout.Column
 import androidx.ui.layout.Row
+import androidx.ui.layout.RowScope.gravity
 import androidx.ui.layout.fillMaxWidth
 import androidx.ui.layout.padding
 import androidx.ui.layout.size
@@ -32,15 +32,23 @@ import androidx.ui.material.OutlinedTextField
 import androidx.ui.material.TopAppBar
 import androidx.ui.res.imageResource
 import androidx.ui.res.vectorResource
+import androidx.ui.text.SpanStyle
 import androidx.ui.text.TextStyle
+import androidx.ui.text.annotatedString
+import androidx.ui.text.font.FontStyle
+import androidx.ui.text.font.FontWeight
+import androidx.ui.text.withStyle
 import com.example.domain.entity.User
 import com.example.tablaapp.R
+import com.example.tablaapp.ui.theme.blackTextColor
 import com.example.tablaapp.ui.theme.cardElevation
 import com.example.tablaapp.ui.theme.cardRoundedCornerShape
 import com.example.tablaapp.ui.theme.listItemIconModifierPadding
 import com.example.tablaapp.ui.theme.listItemIconModifierSize
 import com.example.tablaapp.ui.theme.listItemTrailingFontSize
+import com.example.tablaapp.ui.theme.monthTextSize
 import com.example.tablaapp.ui.theme.rowPadding
+import com.example.tablaapp.ui.theme.whiteBackgroundColor
 import com.example.tablaapp.util.EMPTY_STRING
 import com.example.tablaapp.viewmodel.MainViewModel
 
@@ -108,7 +116,7 @@ fun showMainScreenContent(listOfPlayers: ArrayList<User>, viewModel: MainViewMod
     LazyColumnItems(items = listOfPlayers) {
         Row(modifier = Modifier.fillMaxWidth().padding(rowPadding)) {
             Card(
-                color = Color.White,
+                color = whiteBackgroundColor,
                 shape = RoundedCornerShape(cardRoundedCornerShape),
                 elevation = cardElevation,
                 modifier = Modifier.fillMaxWidth()
@@ -146,5 +154,25 @@ fun showMainScreenContent(listOfPlayers: ArrayList<User>, viewModel: MainViewMod
                 }
             }
         }
+    }
+}
+
+@Composable
+fun showCurrentMonth(month: String) {
+    Column(modifier = Modifier.gravity(Alignment.CenterVertically)) {
+        Text(
+            text = annotatedString {
+                withStyle(
+                    SpanStyle(
+                        color = blackTextColor,
+                        fontSize = monthTextSize,
+                        fontWeight = FontWeight.W800,
+                        fontStyle = FontStyle.Normal
+                    )
+                ) {
+                    append(month)
+                }
+            }
+        )
     }
 }
