@@ -7,18 +7,29 @@ import androidx.lifecycle.ViewModel
 import androidx.ui.graphics.Color
 import com.example.domain.entity.User
 import com.example.domain.util.ZERO_POINT
+import com.example.tablaapp.ui.theme.redWarningErrorColor
+import com.example.tablaapp.ui.theme.whiteBackgroundColor
 import com.example.tablaapp.util.EMPTY_STRING
+import com.example.tablaapp.util.MONTH_SIMPLE_DATE_FORMAT
 import com.example.tablaapp.util.ONE_INT
-import com.example.tablaapp.util.getMonth
 import com.example.tablaapp.viewmodel.MainViewModel.MainStatus.FINISH
 import com.example.tablaapp.viewmodel.MainViewModel.MainStatus.INIT
 import com.example.tablaapp.viewmodel.MainViewModel.MainStatus.SHOW_DIALOG
 import com.example.tablaapp.viewmodel.contract.MainContract
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 class MainViewModel @ViewModelInject constructor() : ViewModel(), MainContract.ViewModel {
 
     private var mutableMainState: MutableState<MainData> = mutableStateOf(
-        MainData(INIT, MainCardPlayerData(), MainDialogData(), arrayListOf(), getMonth())
+        MainData(
+            INIT,
+            MainCardPlayerData(),
+            MainDialogData(),
+            arrayListOf(),
+            SimpleDateFormat(MONTH_SIMPLE_DATE_FORMAT, Locale.ENGLISH).format(Calendar.getInstance().time)
+        )
     )
 
     val mainState: MutableState<MainData>
@@ -60,7 +71,7 @@ class MainViewModel @ViewModelInject constructor() : ViewModel(), MainContract.V
             mutableMainState.value = MainData(
                 SHOW_DIALOG,
                 MainCardPlayerData(),
-                MainDialogData(isEmptyDialogInputText = true, showErrorText = true, labelColor = Color.Red),
+                MainDialogData(isEmptyDialogInputText = true, showErrorText = true, labelColor = redWarningErrorColor),
                 mainState.value.listOfPlayers,
                 mainState.value.currentMonth
             )
@@ -134,7 +145,7 @@ class MainViewModel @ViewModelInject constructor() : ViewModel(), MainContract.V
     data class MainDialogData(
         val isEmptyDialogInputText: Boolean = false,
         val showErrorText: Boolean = false,
-        val labelColor: Color = Color.Unset
+        val labelColor: Color = whiteBackgroundColor
     )
 
     data class MainCardPlayerData(

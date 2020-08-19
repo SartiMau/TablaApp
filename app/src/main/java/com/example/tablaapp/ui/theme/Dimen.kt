@@ -10,4 +10,3 @@ val listItemIconModifierPadding = 8.dp
 val listItemIconModifierSize = 60.dp
 val listItemTrailingFontSize = 40.sp
 val monthTextSize = 40.sp
-val monthFontWeight = 800
