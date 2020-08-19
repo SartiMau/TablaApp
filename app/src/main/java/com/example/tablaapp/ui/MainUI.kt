@@ -46,6 +46,7 @@ import com.example.tablaapp.ui.theme.cardRoundedCornerShape
 import com.example.tablaapp.ui.theme.listItemIconModifierPadding
 import com.example.tablaapp.ui.theme.listItemIconModifierSize
 import com.example.tablaapp.ui.theme.listItemTrailingFontSize
+import com.example.tablaapp.ui.theme.monthFontWeight
 import com.example.tablaapp.ui.theme.monthTextSize
 import com.example.tablaapp.ui.theme.rowPadding
 import com.example.tablaapp.util.EMPTY_STRING
@@ -165,7 +166,7 @@ fun showCurrentMonth(month: String) {
                     SpanStyle(
                         color = Color.Black,
                         fontSize = monthTextSize,
-                        fontWeight = FontWeight.W800,
+                        fontWeight = FontWeight(monthFontWeight),
                         fontStyle = FontStyle.Normal
                     )
                 ) {
