@@ -59,9 +59,6 @@ import com.example.tablaapp.viewmodel.MainViewModel
 
 @Composable
 fun setToolbar(context: Context, viewModel: MainViewModel) {
-    val iconButton = @Composable {
-        IconButton(onClick = { viewModel.showMoreOptions() }) { Icon(vectorResource(R.drawable.ic_baseline_more_vert)) }
-    }
     MaterialTheme {
         TopAppBar(
             title = { Text(context.getString(R.string.app_name)) },
@@ -70,7 +67,9 @@ fun setToolbar(context: Context, viewModel: MainViewModel) {
             },
             actions = {
                 DropdownMenu(
-                    toggle = iconButton,
+                    toggle = {
+                        IconButton(onClick = { viewModel.showMoreOptions() }) { Icon(vectorResource(R.drawable.ic_baseline_more_vert)) }
+                    },
                     expanded = viewModel.mainState.value.showMoreOptions,
                     onDismissRequest = { viewModel.showMoreOptions() }
                 ) {
