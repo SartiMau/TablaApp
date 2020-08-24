@@ -10,10 +10,10 @@ import androidx.ui.core.ContentScale
 import androidx.ui.core.Modifier
 import androidx.ui.core.clip
 import androidx.ui.foundation.Box
-import androidx.ui.foundation.Clickable
 import androidx.ui.foundation.Icon
 import androidx.ui.foundation.Image
 import androidx.ui.foundation.Text
+import androidx.ui.foundation.clickable
 import androidx.ui.foundation.lazy.LazyColumnItems
 import androidx.ui.foundation.shape.corner.CircleShape
 import androidx.ui.foundation.shape.corner.RoundedCornerShape
@@ -170,18 +170,17 @@ fun showMainScreenContent(listOfPlayers: ArrayList<User>, viewModel: MainViewMod
                     Column(modifier = Modifier.gravity(Alignment.CenterVertically)) {
                         if (viewModel.mainState.value.mainCard.nameOfCardToOpen == it.name) {
                             Row {
-                                Clickable(onClick = { viewModel.addPointToPlayer(it) }) {
-                                    Image(vectorResource(R.drawable.ic_baseline_arrow_drop_up))
-                                }
-                                Clickable(
-                                    onClick = { viewModel.removePointToPlayer(it) },
-                                    enabled = viewModel.mainState.value.mainCard.enableButton
-                                ) {
-                                    if (viewModel.mainState.value.mainCard.enableButton) {
-                                        Image(vectorResource(R.drawable.ic_baseline_arrow_drop_down_enable))
-                                    } else {
-                                        Image(vectorResource(R.drawable.ic_baseline_arrow_drop_down_disable))
-                                    }
+                                Image(
+                                    vectorResource(R.drawable.ic_baseline_arrow_drop_up),
+                                    modifier = Modifier.clickable(onClick = { viewModel.addPointToPlayer(it) })
+                                )
+                                if (viewModel.mainState.value.mainCard.enableButton) {
+                                    Image(
+                                        vectorResource(R.drawable.ic_baseline_arrow_drop_down_enable),
+                                        Modifier.clickable(onClick = { viewModel.removePointToPlayer(it) })
+                                    )
+                                } else {
+                                    Image(vectorResource(R.drawable.ic_baseline_arrow_drop_down_disable))
                                 }
                             }
                         }
