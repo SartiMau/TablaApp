@@ -5,11 +5,20 @@ import androidx.compose.mutableStateOf
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.ui.graphics.Color
+import com.example.domain.entity.Month
 import com.example.domain.entity.User
 import com.example.domain.util.ZERO_POINT
 import com.example.tablaapp.ui.theme.redWarningErrorColor
 import com.example.tablaapp.ui.theme.whiteBackgroundColor
+import com.example.tablaapp.util.ACTUAL
 import com.example.tablaapp.util.EMPTY_STRING
+import com.example.tablaapp.util.HISTORY
+import com.example.tablaapp.util.MOCK_MONTH_AUGUST
+import com.example.tablaapp.util.MOCK_MONTH_SEPTEMBER
+import com.example.tablaapp.util.MOCK_NAME_LUCHO
+import com.example.tablaapp.util.MOCK_NAME_NICO
+import com.example.tablaapp.util.MOCK_POINT_LUCHO
+import com.example.tablaapp.util.MOCK_POINT_NICO
 import com.example.tablaapp.util.MONTH_SIMPLE_DATE_FORMAT
 import com.example.tablaapp.util.ONE_INT
 import com.example.tablaapp.util.ZERO_INT
@@ -159,13 +168,61 @@ class MainViewModel @ViewModelInject constructor() : ViewModel(), MainContract.V
         )
     }
 
+    fun showTabSelected(tabSelected: Int) {
+        val year = Calendar.getInstance().get(Calendar.YEAR).toString()
+        if (tabSelected == ZERO_INT) {
+            mutableMainState.value = MainData(
+                INIT,
+                MainCardPlayerData(),
+                MainDialogData(),
+                mainState.value.listOfPlayers,
+                mainState.value.currentMonth,
+                tabState = ACTUAL
+            )
+        } else {
+            mutableMainState.value = MainData(
+                INIT,
+                MainCardPlayerData(),
+                MainDialogData(),
+                mainState.value.listOfPlayers,
+                mainState.value.currentMonth,
+                tabState = HISTORY,
+                listOfWinners = arrayListOf(
+                    Month("$MOCK_MONTH_AUGUST $year", MOCK_NAME_LUCHO, MOCK_POINT_LUCHO),
+                    Month("$MOCK_MONTH_SEPTEMBER $year", MOCK_NAME_NICO, MOCK_POINT_NICO)
+                )
+            )
+        }
+    }
+
+    fun showMonthCard(month: String) {
+        val monthOpen = if (month == mainState.value.openMonthCard) EMPTY_STRING else month
+        val year = Calendar.getInstance().get(Calendar.YEAR).toString()
+        mutableMainState.value = MainData(
+            INIT,
+            MainCardPlayerData(),
+            MainDialogData(),
+            mainState.value.listOfPlayers,
+            mainState.value.currentMonth,
+            tabState = HISTORY,
+            listOfWinners = arrayListOf(
+                Month("$MOCK_MONTH_AUGUST $year", MOCK_NAME_LUCHO, MOCK_POINT_LUCHO),
+                Month("$MOCK_MONTH_SEPTEMBER $year", MOCK_NAME_NICO, MOCK_POINT_NICO)
+            ),
+            openMonthCard = monthOpen
+        )
+    }
+
     data class MainData(
         val state: MainStatus,
         val mainCard: MainCardPlayerData,
         val dialogData: MainDialogData,
         val listOfPlayers: ArrayList<User>,
         val currentMonth: String,
-        val showMoreOptions: Boolean = false
+        val showMoreOptions: Boolean = false,
+        val tabState: String = ACTUAL,
+        val listOfWinners: ArrayList<Month> = arrayListOf(),
+        val openMonthCard: String = EMPTY_STRING
     )
 
     data class MainDialogData(
@@ -182,7 +239,6 @@ class MainViewModel @ViewModelInject constructor() : ViewModel(), MainContract.V
     enum class MainStatus {
         INIT,
         SHOW_DIALOG,
-        FINISH,
-        CONFIRMATION_ERROR
+        FINISH
     }
 }

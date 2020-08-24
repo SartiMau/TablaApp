@@ -2,6 +2,8 @@ package com.example.tablaapp.ui
 
 import android.content.Context
 import androidx.compose.Composable
+import androidx.compose.getValue
+import androidx.compose.setValue
 import androidx.compose.state
 import androidx.ui.core.Alignment
 import androidx.ui.core.ContentScale
@@ -15,12 +17,15 @@ import androidx.ui.foundation.Text
 import androidx.ui.foundation.lazy.LazyColumnItems
 import androidx.ui.foundation.shape.corner.CircleShape
 import androidx.ui.foundation.shape.corner.RoundedCornerShape
+import androidx.ui.graphics.Color
+import androidx.ui.graphics.RectangleShape
 import androidx.ui.input.TextFieldValue
 import androidx.ui.layout.Column
 import androidx.ui.layout.Row
 import androidx.ui.layout.RowScope.gravity
 import androidx.ui.layout.fillMaxWidth
 import androidx.ui.layout.padding
+import androidx.ui.layout.preferredHeight
 import androidx.ui.layout.size
 import androidx.ui.material.AlertDialog
 import androidx.ui.material.Button
@@ -31,6 +36,8 @@ import androidx.ui.material.IconButton
 import androidx.ui.material.ListItem
 import androidx.ui.material.MaterialTheme
 import androidx.ui.material.OutlinedTextField
+import androidx.ui.material.Tab
+import androidx.ui.material.TabRow
 import androidx.ui.material.TopAppBar
 import androidx.ui.res.imageResource
 import androidx.ui.res.vectorResource
@@ -40,11 +47,14 @@ import androidx.ui.text.annotatedString
 import androidx.ui.text.font.FontStyle
 import androidx.ui.text.font.FontWeight
 import androidx.ui.text.withStyle
+import com.example.domain.entity.Month
 import com.example.domain.entity.User
 import com.example.tablaapp.R
 import com.example.tablaapp.ui.theme.blackTextColor
 import com.example.tablaapp.ui.theme.cardElevation
 import com.example.tablaapp.ui.theme.cardRoundedCornerShape
+import com.example.tablaapp.ui.theme.fancyIndicatorBoxPaddingBottom
+import com.example.tablaapp.ui.theme.fancyIndicatorBoxPreferredHeight
 import com.example.tablaapp.ui.theme.listItemIconModifierPadding
 import com.example.tablaapp.ui.theme.listItemIconModifierSize
 import com.example.tablaapp.ui.theme.listItemTrailingFontSize
@@ -52,9 +62,12 @@ import com.example.tablaapp.ui.theme.monthTextSize
 import com.example.tablaapp.ui.theme.paddingStartDropMenuItemText
 import com.example.tablaapp.ui.theme.rowPadding
 import com.example.tablaapp.ui.theme.whiteBackgroundColor
+import com.example.tablaapp.util.ACTUAL
 import com.example.tablaapp.util.ADD_NEW_PLAYER
 import com.example.tablaapp.util.EMPTY_STRING
+import com.example.tablaapp.util.HISTORY
 import com.example.tablaapp.util.RESET_POINTS
+import com.example.tablaapp.util.ZERO_INT
 import com.example.tablaapp.viewmodel.MainViewModel
 
 @Composable
@@ -66,23 +79,25 @@ fun setToolbar(context: Context, viewModel: MainViewModel) {
                 IconButton(onClick = { viewModel.onNavigationIconClicked() }) { Icon(vectorResource(R.drawable.ic_baseline_arrow_back_24)) }
             },
             actions = {
-                DropdownMenu(
-                    toggle = {
-                        IconButton(onClick = { viewModel.showMoreOptions() }) { Icon(vectorResource(R.drawable.ic_baseline_more_vert)) }
-                    },
-                    expanded = viewModel.mainState.value.showMoreOptions,
-                    onDismissRequest = { viewModel.showMoreOptions() }
-                ) {
-                    DropdownMenuItem(onClick = { viewModel.showDialogAddNewPlayer() }) {
-                        Row {
-                            Icon(vectorResource(R.drawable.ic_baseline_person_add_24))
-                            Text(text = ADD_NEW_PLAYER, modifier = Modifier.padding(start = paddingStartDropMenuItemText))
+                if (viewModel.mainState.value.tabState == ACTUAL) {
+                    DropdownMenu(
+                        toggle = {
+                            IconButton(onClick = { viewModel.showMoreOptions() }) { Icon(vectorResource(R.drawable.ic_baseline_more_vert)) }
+                        },
+                        expanded = viewModel.mainState.value.showMoreOptions,
+                        onDismissRequest = { viewModel.showMoreOptions() }
+                    ) {
+                        DropdownMenuItem(onClick = { viewModel.showDialogAddNewPlayer() }) {
+                            Row {
+                                Icon(vectorResource(R.drawable.ic_baseline_person_add_24))
+                                Text(text = ADD_NEW_PLAYER, modifier = Modifier.padding(start = paddingStartDropMenuItemText))
+                            }
                         }
-                    }
-                    DropdownMenuItem(onClick = { viewModel.resetPlayerPoints() }) {
-                        Row {
-                            Icon(vectorResource(R.drawable.ic_baseline_autorenew))
-                            Text(text = RESET_POINTS, modifier = Modifier.padding(start = paddingStartDropMenuItemText))
+                        DropdownMenuItem(onClick = { viewModel.resetPlayerPoints() }) {
+                            Row {
+                                Icon(vectorResource(R.drawable.ic_baseline_autorenew))
+                                Text(text = RESET_POINTS, modifier = Modifier.padding(start = paddingStartDropMenuItemText))
+                            }
                         }
                     }
                 }
@@ -194,5 +209,77 @@ fun showCurrentMonth(month: String) {
                 }
             }
         )
+    }
+}
+
+@Composable
+fun fancyIndicatorTabs(viewModel: MainViewModel) {
+    var state by state { ZERO_INT }
+    val titles = listOf(ACTUAL, HISTORY)
+
+    val indicatorContainer = @Composable { tabPositions: List<TabRow.TabPosition> ->
+        TabRow.IndicatorContainer(tabPositions = tabPositions, selectedIndex = state) {
+            fancyIndicator(whiteBackgroundColor)
+        }
+    }
+    TabRow(
+        items = titles,
+        selectedIndex = state,
+        indicatorContainer = indicatorContainer
+    ) { index, text ->
+        Tab(
+            text = { Text(text) },
+            selected = state == index,
+            onSelected = {
+                viewModel.showTabSelected(index)
+                state = index
+            }
+        )
+    }
+}
+
+@Composable
+fun fancyIndicator(color: Color) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = fancyIndicatorBoxPaddingBottom)
+            .preferredHeight(fancyIndicatorBoxPreferredHeight),
+        backgroundColor = color
+    )
+}
+
+@Composable
+fun showHistoryScreenContent(listOfWinners: ArrayList<Month>, viewModel: MainViewModel) {
+    LazyColumnItems(items = listOfWinners) {
+        Row(modifier = Modifier.fillMaxWidth().padding(rowPadding)) {
+            Card(
+                color = whiteBackgroundColor,
+                shape = RoundedCornerShape(cardRoundedCornerShape),
+                elevation = cardElevation,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                val imageModifier = Modifier
+                    .padding(listItemIconModifierPadding)
+                    .clip(shape = RectangleShape)
+                    .size(listItemIconModifierSize)
+                Box {
+                    ListItem(
+                        text = { Text(text = it.month, style = MaterialTheme.typography.h5) },
+                        icon = { Icon(vectorResource(id = R.drawable.ic_baseline_calendar)) },
+                        onClick = { viewModel.showMonthCard(it.month) }
+                    )
+                    Column(modifier = Modifier.gravity(Alignment.CenterVertically)) {
+                        if (it.month == viewModel.mainState.value.openMonthCard) {
+                            ListItem(
+                                icon = { Image(imageResource(R.drawable.crown), modifier = imageModifier) },
+                                text = { Text(it.winnerName, style = MaterialTheme.typography.h5) },
+                                trailing = { Text(it.winnerPoint.toString(), style = MaterialTheme.typography.h5) }
+                            )
+                        }
+                    }
+                }
+            }
+        }
     }
 }
