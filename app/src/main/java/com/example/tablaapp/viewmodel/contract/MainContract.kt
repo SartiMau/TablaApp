@@ -14,5 +14,7 @@ interface MainContract {
         fun removePointToPlayer(player: User)
         fun showMoreOptions()
         fun resetPlayerPoints()
+        fun showTabSelected(tabSelected: Int)
+        fun showMonthCard(month: String)
     }
 }

@@ -168,7 +168,7 @@ class MainViewModel @ViewModelInject constructor() : ViewModel(), MainContract.V
         )
     }
 
-    fun showTabSelected(tabSelected: Int) {
+    override fun showTabSelected(tabSelected: Int) {
         val year = Calendar.getInstance().get(Calendar.YEAR).toString()
         if (tabSelected == ZERO_INT) {
             mutableMainState.value = MainData(
@@ -195,7 +195,7 @@ class MainViewModel @ViewModelInject constructor() : ViewModel(), MainContract.V
         }
     }
 
-    fun showMonthCard(month: String) {
+    override fun showMonthCard(month: String) {
         val monthOpen = if (month == mainState.value.openMonthCard) EMPTY_STRING else month
         val year = Calendar.getInstance().get(Calendar.YEAR).toString()
         mutableMainState.value = MainData(

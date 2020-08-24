@@ -217,15 +217,14 @@ fun fancyIndicatorTabs(viewModel: MainViewModel) {
     var state by state { ZERO_INT }
     val titles = listOf(ACTUAL, HISTORY)
 
-    val indicatorContainer = @Composable { tabPositions: List<TabRow.TabPosition> ->
-        TabRow.IndicatorContainer(tabPositions = tabPositions, selectedIndex = state) {
-            fancyIndicator(whiteBackgroundColor)
-        }
-    }
     TabRow(
         items = titles,
         selectedIndex = state,
-        indicatorContainer = indicatorContainer
+        indicatorContainer = { tabPositions: List<TabRow.TabPosition> ->
+            TabRow.IndicatorContainer(tabPositions = tabPositions, selectedIndex = state) {
+                fancyIndicator(whiteBackgroundColor)
+            }
+        }
     ) { index, text ->
         Tab(
             text = { Text(text) },
