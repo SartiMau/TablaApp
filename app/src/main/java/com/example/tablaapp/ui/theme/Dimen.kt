@@ -13,3 +13,4 @@ val monthTextSize = 40.sp
 val paddingStartDropMenuItemText = 5.dp
 val fancyIndicatorBoxPaddingBottom = 45.dp
 val fancyIndicatorBoxPreferredHeight = 5.dp
+val initScreenColumnPaddingBottom = 48.dp

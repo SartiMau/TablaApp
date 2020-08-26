@@ -36,6 +36,7 @@ import androidx.ui.material.IconButton
 import androidx.ui.material.ListItem
 import androidx.ui.material.MaterialTheme
 import androidx.ui.material.OutlinedTextField
+import androidx.ui.material.Scaffold
 import androidx.ui.material.Tab
 import androidx.ui.material.TabRow
 import androidx.ui.material.TopAppBar
@@ -55,6 +56,7 @@ import com.example.tablaapp.ui.theme.cardElevation
 import com.example.tablaapp.ui.theme.cardRoundedCornerShape
 import com.example.tablaapp.ui.theme.fancyIndicatorBoxPaddingBottom
 import com.example.tablaapp.ui.theme.fancyIndicatorBoxPreferredHeight
+import com.example.tablaapp.ui.theme.initScreenColumnPaddingBottom
 import com.example.tablaapp.ui.theme.listItemIconModifierPadding
 import com.example.tablaapp.ui.theme.listItemIconModifierSize
 import com.example.tablaapp.ui.theme.listItemTrailingFontSize
@@ -263,12 +265,12 @@ fun showHistoryScreenContent(listOfWinners: ArrayList<Month>, viewModel: MainVie
                     .size(listItemIconModifierSize)
                 Box {
                     ListItem(
-                        text = { Text(text = it.month, style = MaterialTheme.typography.h5) },
+                        text = { Text(text = it.winnerMonth, style = MaterialTheme.typography.h5) },
                         icon = { Icon(vectorResource(id = R.drawable.ic_baseline_calendar)) },
-                        onClick = { viewModel.showMonthCard(it.month) }
+                        onClick = { viewModel.showMonthCard(it.winnerMonth) }
                     )
                     Column(modifier = Modifier.gravity(Alignment.CenterVertically)) {
-                        if (it.month == viewModel.mainState.value.openMonthCard) {
+                        if (it.winnerMonth == viewModel.mainState.value.openMonthCard) {
                             ListItem(
                                 icon = { Image(imageResource(R.drawable.crown), modifier = imageModifier) },
                                 text = { Text(it.winnerName, style = MaterialTheme.typography.h5) },
@@ -280,4 +282,37 @@ fun showHistoryScreenContent(listOfWinners: ArrayList<Month>, viewModel: MainVie
             }
         }
     }
+}
+
+@Composable
+fun initScreen(context: Context, viewModel: MainViewModel) {
+    Scaffold(
+        topBar = { setToolbar(context, viewModel) },
+        bottomBar = { fancyIndicatorTabs(viewModel) },
+        bodyContent = {
+            Column(modifier = Modifier.padding(bottom = initScreenColumnPaddingBottom)) {
+                if (viewModel.mainState.value.tabState == ACTUAL) {
+                    showCurrentMonth(viewModel.mainState.value.currentMonth)
+                    showMainScreenContent(viewModel.mainState.value.listOfPlayers, viewModel)
+                } else {
+                    showHistoryScreenContent(viewModel.mainState.value.listOfWinners, viewModel)
+                }
+            }
+        }
+    )
+}
+
+@Composable
+fun showDialogAddNewPlayerScreen(context: Context, viewModel: MainViewModel) {
+    Scaffold(
+        topBar = { setToolbar(context, viewModel) },
+        bottomBar = { fancyIndicatorTabs(viewModel) },
+        bodyContent = {
+            Column {
+                showCurrentMonth(viewModel.mainState.value.currentMonth)
+                showDialogAddNewPlayer(context, viewModel)
+                showMainScreenContent(viewModel.mainState.value.listOfPlayers, viewModel)
+            }
+        }
+    )
 }
