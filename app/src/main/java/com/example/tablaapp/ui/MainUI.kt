@@ -48,7 +48,7 @@ import androidx.ui.text.annotatedString
 import androidx.ui.text.font.FontStyle
 import androidx.ui.text.font.FontWeight
 import androidx.ui.text.withStyle
-import com.example.domain.entity.Month
+import com.example.domain.entity.WinnerMonth
 import com.example.domain.entity.User
 import com.example.tablaapp.R
 import com.example.tablaapp.ui.theme.blackTextColor
@@ -250,7 +250,7 @@ fun fancyIndicator(color: Color) {
 }
 
 @Composable
-fun showHistoryScreenContent(listOfWinners: ArrayList<Month>, viewModel: MainViewModel) {
+fun showHistoryScreenContent(listOfWinners: ArrayList<WinnerMonth>, viewModel: MainViewModel) {
     LazyColumnItems(items = listOfWinners) {
         Row(modifier = Modifier.fillMaxWidth().padding(rowPadding)) {
             Card(

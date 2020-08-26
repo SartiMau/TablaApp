@@ -1,6 +1,6 @@
 package com.example.domain.entity
 
-data class Month(
+data class WinnerMonth(
     val winnerMonth: String,
     val winnerName: String,
     val winnerPoint: Int

@@ -5,7 +5,7 @@ import androidx.compose.mutableStateOf
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.ui.graphics.Color
-import com.example.domain.entity.Month
+import com.example.domain.entity.WinnerMonth
 import com.example.domain.entity.User
 import com.example.domain.util.ZERO_POINT
 import com.example.tablaapp.ui.theme.redWarningErrorColor
@@ -188,8 +188,8 @@ class MainViewModel @ViewModelInject constructor() : ViewModel(), MainContract.V
                 mainState.value.currentMonth,
                 tabState = HISTORY,
                 listOfWinners = arrayListOf(
-                    Month("$MOCK_MONTH_AUGUST $year", MOCK_NAME_LUCHO, MOCK_POINT_LUCHO),
-                    Month("$MOCK_MONTH_SEPTEMBER $year", MOCK_NAME_NICO, MOCK_POINT_NICO)
+                    WinnerMonth("$MOCK_MONTH_AUGUST $year", MOCK_NAME_LUCHO, MOCK_POINT_LUCHO),
+                    WinnerMonth("$MOCK_MONTH_SEPTEMBER $year", MOCK_NAME_NICO, MOCK_POINT_NICO)
                 )
             )
         }
@@ -206,8 +206,8 @@ class MainViewModel @ViewModelInject constructor() : ViewModel(), MainContract.V
             mainState.value.currentMonth,
             tabState = HISTORY,
             listOfWinners = arrayListOf(
-                Month("$MOCK_MONTH_AUGUST $year", MOCK_NAME_LUCHO, MOCK_POINT_LUCHO),
-                Month("$MOCK_MONTH_SEPTEMBER $year", MOCK_NAME_NICO, MOCK_POINT_NICO)
+                WinnerMonth("$MOCK_MONTH_AUGUST $year", MOCK_NAME_LUCHO, MOCK_POINT_LUCHO),
+                WinnerMonth("$MOCK_MONTH_SEPTEMBER $year", MOCK_NAME_NICO, MOCK_POINT_NICO)
             ),
             openMonthCard = monthOpen
         )
@@ -221,7 +221,7 @@ class MainViewModel @ViewModelInject constructor() : ViewModel(), MainContract.V
         val currentMonth: String,
         val showMoreOptions: Boolean = false,
         val tabState: String = ACTUAL,
-        val listOfWinners: ArrayList<Month> = arrayListOf(),
+        val listOfWinners: ArrayList<WinnerMonth> = arrayListOf(),
         val openMonthCard: String = EMPTY_STRING
     )
 
