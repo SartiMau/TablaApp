@@ -1,6 +1,6 @@
 package com.example.tablaapp.ui.theme
 
-import androidx.ui.graphics.Color
+import androidx.compose.ui.graphics.Color
 
 val purple200 = Color(0xFFBB86FC)
 val purple500 = Color(0xFF6200EE)
@@ -8,4 +8,4 @@ val purple700 = Color(0xFF3700B3)
 val teal200 = Color(0xFF03DAC5)
 val blackTextColor = Color.Black
 val whiteBackgroundColor = Color.White
-val redWarningErrorColor = Color.Red
+val redWarningErrorColor = Color(0xFFEA6D7E)

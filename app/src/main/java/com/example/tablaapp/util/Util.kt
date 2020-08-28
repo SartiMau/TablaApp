@@ -14,3 +14,4 @@ const val MOCK_NAME_LUCHO = "Luciano Elissondo"
 const val MOCK_NAME_NICO = "Nicolas Lopez Bidone"
 const val MOCK_POINT_LUCHO = 100
 const val MOCK_POINT_NICO = 1000
+const val ROUNDED_CORNER_SHAPE_PERCENT = 100

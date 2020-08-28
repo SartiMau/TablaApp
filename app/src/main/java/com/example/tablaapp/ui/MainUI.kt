@@ -1,55 +1,57 @@
 package com.example.tablaapp.ui
 
 import android.content.Context
-import androidx.compose.Composable
-import androidx.compose.getValue
-import androidx.compose.setValue
-import androidx.compose.state
-import androidx.ui.core.Alignment
-import androidx.ui.core.ContentScale
-import androidx.ui.core.Modifier
-import androidx.ui.core.clip
-import androidx.ui.foundation.Box
-import androidx.ui.foundation.Icon
-import androidx.ui.foundation.Image
-import androidx.ui.foundation.Text
-import androidx.ui.foundation.clickable
-import androidx.ui.foundation.lazy.LazyColumnItems
-import androidx.ui.foundation.shape.corner.CircleShape
-import androidx.ui.foundation.shape.corner.RoundedCornerShape
-import androidx.ui.graphics.Color
-import androidx.ui.graphics.RectangleShape
-import androidx.ui.input.TextFieldValue
-import androidx.ui.layout.Column
-import androidx.ui.layout.Row
-import androidx.ui.layout.RowScope.gravity
-import androidx.ui.layout.fillMaxWidth
-import androidx.ui.layout.padding
-import androidx.ui.layout.preferredHeight
-import androidx.ui.layout.size
-import androidx.ui.material.AlertDialog
-import androidx.ui.material.Button
-import androidx.ui.material.Card
-import androidx.ui.material.DropdownMenu
-import androidx.ui.material.DropdownMenuItem
-import androidx.ui.material.IconButton
-import androidx.ui.material.ListItem
-import androidx.ui.material.MaterialTheme
-import androidx.ui.material.OutlinedTextField
-import androidx.ui.material.Scaffold
-import androidx.ui.material.Tab
-import androidx.ui.material.TabRow
-import androidx.ui.material.TopAppBar
-import androidx.ui.res.imageResource
-import androidx.ui.res.vectorResource
-import androidx.ui.text.SpanStyle
-import androidx.ui.text.TextStyle
-import androidx.ui.text.annotatedString
-import androidx.ui.text.font.FontStyle
-import androidx.ui.text.font.FontWeight
-import androidx.ui.text.withStyle
-import com.example.domain.entity.WinnerMonth
+import androidx.compose.foundation.Box
+import androidx.compose.foundation.Icon
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.Text
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope.gravity
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.preferredHeight
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumnFor
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.AlertDialog
+import androidx.compose.material.Button
+import androidx.compose.material.Card
+import androidx.compose.material.DropdownMenu
+import androidx.compose.material.DropdownMenuItem
+import androidx.compose.material.IconButton
+import androidx.compose.material.ListItem
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Tab
+import androidx.compose.material.TabConstants.defaultTabIndicatorOffset
+import androidx.compose.material.TabPosition
+import androidx.compose.material.TabRow
+import androidx.compose.material.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.state
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.imageResource
+import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.annotatedString
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.withStyle
 import com.example.domain.entity.User
+import com.example.domain.entity.WinnerMonth
 import com.example.tablaapp.R
 import com.example.tablaapp.ui.theme.blackTextColor
 import com.example.tablaapp.ui.theme.cardElevation
@@ -68,7 +70,9 @@ import com.example.tablaapp.util.ACTUAL
 import com.example.tablaapp.util.ADD_NEW_PLAYER
 import com.example.tablaapp.util.EMPTY_STRING
 import com.example.tablaapp.util.HISTORY
+import com.example.tablaapp.util.ONE_INT
 import com.example.tablaapp.util.RESET_POINTS
+import com.example.tablaapp.util.ROUNDED_CORNER_SHAPE_PERCENT
 import com.example.tablaapp.util.ZERO_INT
 import com.example.tablaapp.viewmodel.MainViewModel
 
@@ -115,7 +119,7 @@ fun showDialogAddNewPlayer(
 ) {
     val textFieldStatus = state { TextFieldValue(EMPTY_STRING) }
     AlertDialog(
-        onCloseRequest = { viewModel.closeDialog() },
+        onDismissRequest = { viewModel.closeDialog() },
         title = { Text(context.getString(R.string.main_activity_dialog_title)) },
         text = {
             Column {
@@ -150,10 +154,10 @@ fun showDialogAddNewPlayer(
 
 @Composable
 fun showMainScreenContent(listOfPlayers: ArrayList<User>, viewModel: MainViewModel) {
-    LazyColumnItems(items = listOfPlayers) {
+    LazyColumnFor(items = listOfPlayers) {
         Row(modifier = Modifier.fillMaxWidth().padding(rowPadding)) {
             Card(
-                color = whiteBackgroundColor,
+                backgroundColor = whiteBackgroundColor,
                 shape = RoundedCornerShape(cardRoundedCornerShape),
                 elevation = cardElevation,
                 modifier = Modifier.fillMaxWidth()
@@ -167,7 +171,7 @@ fun showMainScreenContent(listOfPlayers: ArrayList<User>, viewModel: MainViewMod
                         icon = { Image(imageResource(R.drawable.photo_1), modifier = imageModifier, contentScale = ContentScale.Crop) },
                         text = { Text(text = it.name, style = MaterialTheme.typography.h5) },
                         trailing = { Text(text = it.points.toString(), style = TextStyle(fontSize = listItemTrailingFontSize)) },
-                        onClick = { viewModel.showCardButtons(it) }
+                        modifier = Modifier.clickable(onClick = { viewModel.showCardButtons(it) })
                     )
                     Column(modifier = Modifier.gravity(Alignment.CenterVertically)) {
                         if (viewModel.mainState.value.mainCard.nameOfCardToOpen == it.name) {
@@ -195,66 +199,78 @@ fun showMainScreenContent(listOfPlayers: ArrayList<User>, viewModel: MainViewMod
 
 @Composable
 fun showCurrentMonth(month: String) {
-    Column(modifier = Modifier.gravity(Alignment.CenterVertically)) {
-        Text(
-            text = annotatedString {
-                withStyle(
-                    SpanStyle(
-                        color = blackTextColor,
-                        fontSize = monthTextSize,
-                        fontWeight = FontWeight.W800,
-                        fontStyle = FontStyle.Normal
-                    )
-                ) {
-                    append(month)
-                }
+    Text(
+        text = annotatedString {
+            withStyle(
+                SpanStyle(
+                    color = blackTextColor,
+                    fontSize = monthTextSize,
+                    fontWeight = FontWeight.W800,
+                    fontStyle = FontStyle.Normal
+                )
+            ) {
+                append(month)
             }
-        )
-    }
+        },
+        modifier = Modifier.gravity(Alignment.CenterVertically)
+    )
 }
 
 @Composable
 fun fancyIndicatorTabs(viewModel: MainViewModel) {
-    var state by state { ZERO_INT }
     val titles = listOf(ACTUAL, HISTORY)
-
+    val actualTab = if (viewModel.mainState.value.tabState == ACTUAL) ZERO_INT else ONE_INT
     TabRow(
-        items = titles,
-        selectedIndex = state,
-        indicatorContainer = { tabPositions: List<TabRow.TabPosition> ->
-            TabRow.IndicatorContainer(tabPositions = tabPositions, selectedIndex = state) {
-                fancyIndicator(whiteBackgroundColor)
-            }
+        selectedTabIndex = actualTab,
+        indicator = { tabPositions: List<TabPosition> ->
+            fancyIndicator(
+                Modifier.defaultTabIndicatorOffset(tabPositions[actualTab])
+            )
         }
-    ) { index, text ->
-        Tab(
-            text = { Text(text) },
-            selected = state == index,
-            onSelected = {
-                viewModel.showTabSelected(index)
-                state = index
-            }
-        )
+    ) {
+        titles.forEachIndexed { index, _ ->
+            Tab(
+                selected = index == actualTab,
+                onClick = { viewModel.showTabSelected(index) },
+                text = {
+                    Text(
+                        text = when (index) {
+                            ZERO_INT -> titles[ZERO_INT]
+                            ONE_INT -> titles[ONE_INT]
+                            else -> EMPTY_STRING
+                        }
+                    )
+                }
+            )
+        }
     }
 }
 
 @Composable
-fun fancyIndicator(color: Color) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
+fun fancyIndicator(
+    modifier: Modifier = Modifier,
+    color: Color = Color.White
+) {
+    Spacer(
+        modifier.fillMaxWidth()
             .padding(bottom = fancyIndicatorBoxPaddingBottom)
-            .preferredHeight(fancyIndicatorBoxPreferredHeight),
-        backgroundColor = color
+            .preferredHeight(fancyIndicatorBoxPreferredHeight)
+            .background(
+                color,
+                RoundedCornerShape(
+                    bottomLeftPercent = ROUNDED_CORNER_SHAPE_PERCENT,
+                    bottomRightPercent = ROUNDED_CORNER_SHAPE_PERCENT
+                )
+            )
     )
 }
 
 @Composable
 fun showHistoryScreenContent(listOfWinners: ArrayList<WinnerMonth>, viewModel: MainViewModel) {
-    LazyColumnItems(items = listOfWinners) {
+    LazyColumnFor(items = listOfWinners) {
         Row(modifier = Modifier.fillMaxWidth().padding(rowPadding)) {
             Card(
-                color = whiteBackgroundColor,
+                backgroundColor = whiteBackgroundColor,
                 shape = RoundedCornerShape(cardRoundedCornerShape),
                 elevation = cardElevation,
                 modifier = Modifier.fillMaxWidth()
@@ -267,7 +283,7 @@ fun showHistoryScreenContent(listOfWinners: ArrayList<WinnerMonth>, viewModel: M
                     ListItem(
                         text = { Text(text = it.winnerMonth, style = MaterialTheme.typography.h5) },
                         icon = { Icon(vectorResource(id = R.drawable.ic_baseline_calendar)) },
-                        onClick = { viewModel.showMonthCard(it.winnerMonth) }
+                        modifier = Modifier.clickable(onClick = { viewModel.showMonthCard(it.winnerMonth) })
                     )
                     Column(modifier = Modifier.gravity(Alignment.CenterVertically)) {
                         if (it.winnerMonth == viewModel.mainState.value.openMonthCard) {
@@ -290,7 +306,7 @@ fun initScreen(context: Context, viewModel: MainViewModel) {
         topBar = { setToolbar(context, viewModel) },
         bottomBar = { fancyIndicatorTabs(viewModel) },
         bodyContent = {
-            Column(modifier = Modifier.padding(bottom = initScreenColumnPaddingBottom)) {
+            Column(modifier = Modifier.fillMaxWidth().padding(bottom = initScreenColumnPaddingBottom)) {
                 if (viewModel.mainState.value.tabState == ACTUAL) {
                     showCurrentMonth(viewModel.mainState.value.currentMonth)
                     showMainScreenContent(viewModel.mainState.value.listOfPlayers, viewModel)
@@ -308,7 +324,7 @@ fun showDialogAddNewPlayerScreen(context: Context, viewModel: MainViewModel) {
         topBar = { setToolbar(context, viewModel) },
         bottomBar = { fancyIndicatorTabs(viewModel) },
         bodyContent = {
-            Column {
+            Column(modifier = Modifier.fillMaxWidth()) {
                 showCurrentMonth(viewModel.mainState.value.currentMonth)
                 showDialogAddNewPlayer(context, viewModel)
                 showMainScreenContent(viewModel.mainState.value.listOfPlayers, viewModel)
