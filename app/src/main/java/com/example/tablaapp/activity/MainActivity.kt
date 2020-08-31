@@ -4,8 +4,8 @@ import android.content.Context
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.Composable
-import androidx.ui.core.setContent
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.setContent
 import com.example.tablaapp.ui.initScreen
 import com.example.tablaapp.ui.showDialogAddNewPlayerScreen
 import com.example.tablaapp.viewmodel.MainViewModel

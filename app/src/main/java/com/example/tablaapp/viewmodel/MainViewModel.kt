@@ -1,12 +1,12 @@
 package com.example.tablaapp.viewmodel
 
-import androidx.compose.MutableState
-import androidx.compose.mutableStateOf
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.graphics.Color
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
-import androidx.ui.graphics.Color
-import com.example.domain.entity.WinnerMonth
 import com.example.domain.entity.User
+import com.example.domain.entity.WinnerMonth
 import com.example.domain.util.ZERO_POINT
 import com.example.tablaapp.ui.theme.redWarningErrorColor
 import com.example.tablaapp.ui.theme.whiteBackgroundColor
@@ -122,7 +122,7 @@ class MainViewModel @ViewModelInject constructor() : ViewModel(), MainContract.V
         mainState.value.listOfPlayers[position].points = mainState.value.listOfPlayers[position].points + ONE_INT
         mutableMainState.value = MainData(
             INIT,
-            MainCardPlayerData(mainState.value.mainCard.nameOfCardToOpen),
+            MainCardPlayerData(),
             MainDialogData(),
             mainState.value.listOfPlayers,
             mainState.value.currentMonth
@@ -135,8 +135,7 @@ class MainViewModel @ViewModelInject constructor() : ViewModel(), MainContract.V
         mutableMainState.value = MainData(
             INIT,
             MainCardPlayerData(
-                mainState.value.mainCard.nameOfCardToOpen,
-                mainState.value.listOfPlayers[position].points != ZERO_POINT
+                enableButton = mainState.value.listOfPlayers[position].points != ZERO_POINT
             ),
             MainDialogData(),
             mainState.value.listOfPlayers,
