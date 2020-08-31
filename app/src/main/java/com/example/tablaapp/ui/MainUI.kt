@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope.gravity
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.preferredHeight
@@ -68,6 +67,8 @@ import com.example.tablaapp.ui.theme.listItemTrailingFontSize
 import com.example.tablaapp.ui.theme.monthTextSize
 import com.example.tablaapp.ui.theme.paddingStartDropMenuItemText
 import com.example.tablaapp.ui.theme.rowPadding
+import com.example.tablaapp.ui.theme.trashDeletePlayerPaddingBottom
+import com.example.tablaapp.ui.theme.trashDeletePlayerPaddingEnd
 import com.example.tablaapp.ui.theme.whiteBackgroundColor
 import com.example.tablaapp.util.ACTUAL
 import com.example.tablaapp.util.ADD_NEW_PLAYER
@@ -176,28 +177,29 @@ fun showMainScreenContent(listOfPlayers: ArrayList<User>, viewModel: MainViewMod
                         trailing = { Text(text = it.points.toString(), style = TextStyle(fontSize = listItemTrailingFontSize)) },
                         modifier = Modifier.clickable(onClick = { viewModel.showCardButtons(it) })
                     )
-                    if (viewModel.mainState.value.mainCard.nameOfCardToOpen == it.name) {
-                        Row(modifier = Modifier.gravity(Alignment.CenterHorizontally)) {
-                            Image(
-                                vectorResource(R.drawable.ic_baseline_arrow_drop_up),
-                                modifier = Modifier
-                                    .clickable(onClick = { viewModel.addPointToPlayer(it) })
-                            )
-                            if (viewModel.mainState.value.mainCard.enableButton) {
+                    Column(modifier = Modifier.fillMaxWidth()) {
+                        if (viewModel.mainState.value.mainCard.nameOfCardToOpen == it.name) {
+                            Row(modifier = Modifier.gravity(Alignment.CenterHorizontally)) {
                                 Image(
-                                    vectorResource(R.drawable.ic_baseline_arrow_drop_down_enable),
-                                    Modifier.clickable(onClick = { viewModel.removePointToPlayer(it) })
+                                    vectorResource(R.drawable.ic_baseline_arrow_drop_up),
+                                    modifier = Modifier.clickable(onClick = { viewModel.addPointToPlayer(it) })
                                 )
-                            } else {
-                                Image(vectorResource(R.drawable.ic_baseline_arrow_drop_down_disable))
+                                if (viewModel.mainState.value.mainCard.enableButton) {
+                                    Image(
+                                        vectorResource(R.drawable.ic_baseline_arrow_drop_down_enable),
+                                        Modifier.clickable(onClick = { viewModel.removePointToPlayer(it) })
+                                    )
+                                } else {
+                                    Image(vectorResource(R.drawable.ic_baseline_arrow_drop_down_disable))
+                                }
                             }
-                            Column(modifier = Modifier.gravity(Alignment.Bottom)) {
-                                Icon(
-                                    vectorResource(R.drawable.ic_baseline_delete),
-                                    modifier = Modifier
-                                        .gravity(Alignment.End)
-                                        .clickable(onClick = { viewModel.showDialogDeletePlayer(it) })
-                                )
+                            Column(
+                                modifier = Modifier
+                                    .clickable(onClick = { viewModel.showDialogDeletePlayer(it) })
+                                    .padding(end = trashDeletePlayerPaddingEnd, bottom = trashDeletePlayerPaddingBottom)
+                                    .gravity(Alignment.End)
+                            ) {
+                                Image(vectorResource(R.drawable.ic_baseline_delete))
                             }
                         }
                     }
