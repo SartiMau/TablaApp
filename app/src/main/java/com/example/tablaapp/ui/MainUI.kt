@@ -1,6 +1,7 @@
 package com.example.tablaapp.ui
 
 import android.content.Context
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Box
 import androidx.compose.foundation.Icon
 import androidx.compose.foundation.Image
@@ -11,10 +12,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope.gravity
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.preferredHeight
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumnFor
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -154,7 +157,7 @@ fun showDialogAddNewPlayer(
 
 @Composable
 fun showMainScreenContent(listOfPlayers: ArrayList<User>, viewModel: MainViewModel) {
-    LazyColumnFor(items = listOfPlayers) {
+    LazyColumnFor(items = listOfPlayers, modifier = Modifier.fillMaxHeight()) {
         Row(modifier = Modifier.fillMaxWidth().padding(rowPadding)) {
             Card(
                 backgroundColor = whiteBackgroundColor,
@@ -166,7 +169,7 @@ fun showMainScreenContent(listOfPlayers: ArrayList<User>, viewModel: MainViewMod
                     .padding(listItemIconModifierPadding)
                     .clip(shape = CircleShape)
                     .size(listItemIconModifierSize)
-                Box {
+                Box(modifier = Modifier.wrapContentSize().animateContentSize()) {
                     ListItem(
                         icon = { Image(imageResource(R.drawable.photo_1), modifier = imageModifier, contentScale = ContentScale.Crop) },
                         text = { Text(text = it.name, style = MaterialTheme.typography.h5) },

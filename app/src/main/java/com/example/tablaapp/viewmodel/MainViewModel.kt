@@ -122,7 +122,7 @@ class MainViewModel @ViewModelInject constructor() : ViewModel(), MainContract.V
         mainState.value.listOfPlayers[position].points = mainState.value.listOfPlayers[position].points + ONE_INT
         mutableMainState.value = MainData(
             INIT,
-            MainCardPlayerData(mainState.value.mainCard.nameOfCardToOpen),
+            MainCardPlayerData(),
             MainDialogData(),
             mainState.value.listOfPlayers,
             mainState.value.currentMonth
@@ -135,8 +135,7 @@ class MainViewModel @ViewModelInject constructor() : ViewModel(), MainContract.V
         mutableMainState.value = MainData(
             INIT,
             MainCardPlayerData(
-                mainState.value.mainCard.nameOfCardToOpen,
-                mainState.value.listOfPlayers[position].points != ZERO_POINT
+                enableButton = mainState.value.listOfPlayers[position].points != ZERO_POINT
             ),
             MainDialogData(),
             mainState.value.listOfPlayers,
