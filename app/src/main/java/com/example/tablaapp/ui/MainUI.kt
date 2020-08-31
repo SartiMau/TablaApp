@@ -157,7 +157,7 @@ fun showDialogAddNewPlayer(
 
 @Composable
 fun showMainScreenContent(listOfPlayers: ArrayList<User>, viewModel: MainViewModel) {
-    LazyColumnFor(items = listOfPlayers, modifier = Modifier.fillMaxHeight()) {
+    LazyColumnFor(items = listOfPlayers) {
         Row(modifier = Modifier.fillMaxWidth().padding(rowPadding)) {
             Card(
                 backgroundColor = whiteBackgroundColor,
@@ -176,21 +176,28 @@ fun showMainScreenContent(listOfPlayers: ArrayList<User>, viewModel: MainViewMod
                         trailing = { Text(text = it.points.toString(), style = TextStyle(fontSize = listItemTrailingFontSize)) },
                         modifier = Modifier.clickable(onClick = { viewModel.showCardButtons(it) })
                     )
-                    Column(modifier = Modifier.gravity(Alignment.CenterVertically)) {
-                        if (viewModel.mainState.value.mainCard.nameOfCardToOpen == it.name) {
-                            Row {
+                    if (viewModel.mainState.value.mainCard.nameOfCardToOpen == it.name) {
+                        Row(modifier = Modifier.gravity(Alignment.CenterHorizontally)) {
+                            Image(
+                                vectorResource(R.drawable.ic_baseline_arrow_drop_up),
+                                modifier = Modifier
+                                    .clickable(onClick = { viewModel.addPointToPlayer(it) })
+                            )
+                            if (viewModel.mainState.value.mainCard.enableButton) {
                                 Image(
-                                    vectorResource(R.drawable.ic_baseline_arrow_drop_up),
-                                    modifier = Modifier.clickable(onClick = { viewModel.addPointToPlayer(it) })
+                                    vectorResource(R.drawable.ic_baseline_arrow_drop_down_enable),
+                                    Modifier.clickable(onClick = { viewModel.removePointToPlayer(it) })
                                 )
-                                if (viewModel.mainState.value.mainCard.enableButton) {
-                                    Image(
-                                        vectorResource(R.drawable.ic_baseline_arrow_drop_down_enable),
-                                        Modifier.clickable(onClick = { viewModel.removePointToPlayer(it) })
-                                    )
-                                } else {
-                                    Image(vectorResource(R.drawable.ic_baseline_arrow_drop_down_disable))
-                                }
+                            } else {
+                                Image(vectorResource(R.drawable.ic_baseline_arrow_drop_down_disable))
+                            }
+                            Column(modifier = Modifier.gravity(Alignment.Bottom)) {
+                                Icon(
+                                    vectorResource(R.drawable.ic_baseline_delete),
+                                    modifier = Modifier
+                                        .gravity(Alignment.End)
+                                        .clickable(onClick = { viewModel.showDialogDeletePlayer(it) })
+                                )
                             }
                         }
                     }
@@ -330,6 +337,42 @@ fun showDialogAddNewPlayerScreen(context: Context, viewModel: MainViewModel) {
             Column(modifier = Modifier.fillMaxWidth()) {
                 showCurrentMonth(viewModel.mainState.value.currentMonth)
                 showDialogAddNewPlayer(context, viewModel)
+                showMainScreenContent(viewModel.mainState.value.listOfPlayers, viewModel)
+            }
+        }
+    )
+}
+
+@Composable
+fun showDialogDeletePlayer(context: Context, user: User, viewModel: MainViewModel) {
+    AlertDialog(
+        onDismissRequest = { viewModel.closeDeletePlayerDialog(user) },
+        title = { Text(context.getString(R.string.main_activity_delete_dialog_title)) },
+        text = {
+            Text(text = context.getString(R.string.main_activity_delete_dialog_text, user.name))
+        },
+        dismissButton = {
+            Button(onClick = { viewModel.closeDeletePlayerDialog(user) }) {
+                Text(context.getString(R.string.main_activity_dialog_cancel_button))
+            }
+        },
+        confirmButton = {
+            Button(onClick = { viewModel.onConfirmDeleteDialogButton(user) }) {
+                Text(context.getString(R.string.main_activity_dialog_confirmation_button))
+            }
+        }
+    )
+}
+
+@Composable
+fun showDialogDeletePlayerScreen(context: Context, user: User, viewModel: MainViewModel) {
+    Scaffold(
+        topBar = { setToolbar(context, viewModel) },
+        bottomBar = { fancyIndicatorTabs(viewModel) },
+        bodyContent = {
+            Column {
+                showCurrentMonth(viewModel.mainState.value.currentMonth)
+                showDialogDeletePlayer(context, user, viewModel)
                 showMainScreenContent(viewModel.mainState.value.listOfPlayers, viewModel)
             }
         }

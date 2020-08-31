@@ -16,5 +16,8 @@ interface MainContract {
         fun resetPlayerPoints()
         fun showTabSelected(tabSelected: Int)
         fun showMonthCard(month: String)
+        fun showDialogDeletePlayer(user: User)
+        fun onConfirmDeleteDialogButton(user: User)
+        fun closeDeletePlayerDialog(user: User)
     }
 }

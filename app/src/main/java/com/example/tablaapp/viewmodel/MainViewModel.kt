@@ -24,6 +24,7 @@ import com.example.tablaapp.util.ONE_INT
 import com.example.tablaapp.util.ZERO_INT
 import com.example.tablaapp.viewmodel.MainViewModel.MainStatus.FINISH
 import com.example.tablaapp.viewmodel.MainViewModel.MainStatus.INIT
+import com.example.tablaapp.viewmodel.MainViewModel.MainStatus.SHOW_DELETE_PLAYER_DIALOG
 import com.example.tablaapp.viewmodel.MainViewModel.MainStatus.SHOW_DIALOG
 import com.example.tablaapp.viewmodel.contract.MainContract
 import java.text.SimpleDateFormat
@@ -212,6 +213,40 @@ class MainViewModel @ViewModelInject constructor() : ViewModel(), MainContract.V
         )
     }
 
+    override fun showDialogDeletePlayer(user: User) {
+        mutableMainState.value = MainData(
+            SHOW_DELETE_PLAYER_DIALOG,
+            mainCard = MainCardPlayerData(user.name, user.points != ZERO_POINT),
+            dialogData = MainDialogData(),
+            listOfPlayers = mainState.value.listOfPlayers,
+            currentMonth = mainState.value.currentMonth,
+            listOfWinners = mainState.value.listOfWinners,
+            deleteDialogName = user
+        )
+    }
+
+    override fun onConfirmDeleteDialogButton(user: User) {
+        mainState.value.listOfPlayers.remove(user)
+        mutableMainState.value = MainData(
+            INIT,
+            mainCard = MainCardPlayerData(),
+            dialogData = MainDialogData(),
+            listOfPlayers = mainState.value.listOfPlayers,
+            currentMonth = mainState.value.currentMonth,
+            listOfWinners = mainState.value.listOfWinners
+        )
+    }
+
+    override fun closeDeletePlayerDialog(user: User) {
+        mutableMainState.value = MainData(
+            INIT,
+            MainCardPlayerData(user.name, user.points != ZERO_POINT),
+            MainDialogData(),
+            mainState.value.listOfPlayers,
+            mainState.value.currentMonth
+        )
+    }
+
     data class MainData(
         val state: MainStatus,
         val mainCard: MainCardPlayerData,
@@ -221,7 +256,8 @@ class MainViewModel @ViewModelInject constructor() : ViewModel(), MainContract.V
         val showMoreOptions: Boolean = false,
         val tabState: String = ACTUAL,
         val listOfWinners: ArrayList<WinnerMonth> = arrayListOf(),
-        val openMonthCard: String = EMPTY_STRING
+        val openMonthCard: String = EMPTY_STRING,
+        val deleteDialogName: User = User(EMPTY_STRING)
     )
 
     data class MainDialogData(
@@ -238,6 +274,7 @@ class MainViewModel @ViewModelInject constructor() : ViewModel(), MainContract.V
     enum class MainStatus {
         INIT,
         SHOW_DIALOG,
+        SHOW_DELETE_PLAYER_DIALOG,
         FINISH
     }
 }
