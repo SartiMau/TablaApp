@@ -14,3 +14,5 @@ val paddingStartDropMenuItemText = 5.dp
 val fancyIndicatorBoxPaddingBottom = 43.dp
 val fancyIndicatorBoxPreferredHeight = 5.dp
 val initScreenColumnPaddingBottom = 48.dp
+val trashDeletePlayerPaddingBottom = 15.dp
+val trashDeletePlayerPaddingEnd = 15.dp

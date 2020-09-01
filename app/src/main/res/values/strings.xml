@@ -2,6 +2,8 @@
     <string name="app_name">TablApp</string>
 
     <string name="main_activity_dialog_title">Add new player</string>
+    <string name="main_activity_delete_dialog_text">Are you sure you want to delete the player %1$s ?</string>
+    <string name="main_activity_delete_dialog_title">Remove player</string>
     <string name="main_activity_dialog_label_text">New player name</string>
     <string name="main_activity_dialog_cancel_button">Cancel</string>
     <string name="main_activity_dialog_confirmation_button">OK</string>
